@@ -59,7 +59,9 @@ class QuoteCallouts {
       shortcut: "alt+C",
     });
 
-    // Add callout to keyboard shortcuts help modal
+    // Add callout to keyboard shortcuts help modal.
+    // Core expects each shortcut to be an object built by buildShortcut()
+    // ({ shortcut, shortcutTexts, description }) so the search/filter works.
     // TODO: Remove this if core generates the list later.
     api.modifyClass("component:modal/keyboard-shortcuts-help", (Superclass) => {
       return class extends Superclass {
@@ -69,13 +71,16 @@ class QuoteCallouts {
             return shortcuts;
           }
 
-          shortcuts.composing.shortcuts.callout = `
-            <span class="delimiter-or" dir="ltr">
-              <kbd>Ctrl</kbd>
-              <kbd>Alt</kbd>
-              <kbd>C</kbd>
-            </span>
-            ${i18n(themePrefix("composer.insert_callout"))}`;
+          shortcuts.composing.shortcuts.callout = {
+            shortcut: `
+              <span class="delimiter-or" dir="ltr">
+                <kbd>Ctrl</kbd>
+                <kbd>Alt</kbd>
+                <kbd>C</kbd>
+              </span>`,
+            shortcutTexts: ["Ctrl Alt C"],
+            description: i18n(themePrefix("composer.insert_callout")),
+          };
           return shortcuts;
         }
       };
